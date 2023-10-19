@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  mysql-test:
+    restart: always
+    container_name: mysql-test
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=transferDB
+    ## 載入透過docker-entrypoint-initdb.d 自動執行初始化需要執行的腳本
+    ports:
+      - 3306:3306
+
+  migrateup:
+    image: migrate/migrate  # 使用 migrate/migrate 镜像
+    volumes:
+      - ./db/migration:/migrations
+    depends_on: 
+      - mysql-test
+    command: ["-path", "migrations", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "up"]
+
+  migratedown:
+    image: migrate/migrate  # 使用 migrate/migrate 镜像
+    volumes:
+      - ./db/migration:/migrations
+    depends_on: 
+      - mysql-test
+    command: ["-path", "migrations", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "down", "000001"]

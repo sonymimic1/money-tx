@@ -8,7 +8,7 @@ MYSQL_DB=transferDB
 ##=======================Database================================
 # Ｍysql 容器 
 mysql:
-	docker run -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
+	docker-compose up -d mysql-test
 # 建立資料庫
 createdb:
 	docker exec -it mysql-test mysql -u"$(MYSQL_USER)" -p"$(MYSQL_PASSWORD)" -e "create database "$(MYSQL_DB)""
@@ -21,11 +21,23 @@ migrateinit:
 	docker run -v "$(shell pwd)"/db/migration:/migrations --rm migrate/migrate create -ext sql -dir migrations -seq init_schema
 
 # 將migration文件進行處理（建立表格或是新增異動）
+#migrateup:
+#	docker run -v "$(shell pwd)"/db/migration:/migrations --rm migrate/migrate -path migrations -database "mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp(mysql-test:$(MYSQL_ADDRESS_PORT))/$(MYSQL_DB)" -verbose up
+###
+###
+# [[ docker-compose 方式]]
 migrateup:
-	docker run -v "$(shell pwd)"/db/migration:/migrations --rm migrate/migrate -path migrations -database "mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_ADDRESS):$(MYSQL_ADDRESS_PORT))/$(MYSQL_DB)" -verbose up
+	docker-compose up migrateup
+
 # 將migration文件進行處理退回上一步處理（刪除表格或是刪除異動）
+#migratedown:
+#	docker run -v "$(shell pwd)"/db/migration:/migrations --rm migrate/migrate -path migrations -database "mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_ADDRESS):$(MYSQL_ADDRESS_PORT))/$(MYSQL_DB)" -verbose down 000001
+###
+###
+# [[ docker-compose 方式]]
 migratedown:
-	docker run -v "$(shell pwd)"/db/migration:/migrations --rm migrate/migrate -path migrations -database "mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_ADDRESS):$(MYSQL_ADDRESS_PORT))/$(MYSQL_DB)" -verbose down 000001
+	docker-compose up migratedown
+
 
 # 初始化sqlc文件 (sqlc.yaml)
 # https://github.com/kyleconroy/sqlc

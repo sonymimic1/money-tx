@@ -23,12 +23,8 @@ jobs:
     - name: mysql service on docker
       run: make mysql
     
-    - name: Get Host IP
-      id: get_host_ip
-      run: echo "host_ip=$(ip route | grep default | awk '{print $3}')" >> $GITHUB_OUTPUT
-    
     - name: db migration
-      run: docker run -v "$(shell pwd)"/db/migration:/migrations --rm migrate/migrate -path migrations -database "mysql://root:123456@tcp(${{ steps.get_host_ip.outputs.host_ip }}:3306)/transferDB" -verbose up
-
+      run: make migrateup
+      
     - name: Test
       run: make test
