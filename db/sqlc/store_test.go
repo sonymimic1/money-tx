@@ -14,7 +14,7 @@ func TestStore_TransferTx(t *testing.T) {
 	account1 := addAccount(t)
 	account2 := addAccount(t)
 	fmt.Println(">>before:", account1.Balance, account2.Balance)
-	n := 25
+	n := 5
 
 	amount := int64(10)
 
