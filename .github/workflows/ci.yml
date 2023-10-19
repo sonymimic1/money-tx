@@ -24,7 +24,7 @@ jobs:
       run: make mysql
 
     - name: wait
-      run: sleep 5s
+      run: sleep 20s
 
     - name: db migration
       run: make migrateup
