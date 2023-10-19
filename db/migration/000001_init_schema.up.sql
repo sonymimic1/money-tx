@@ -21,9 +21,9 @@ USE `transferDB` ;
 -- Table `transferDB`.`accounts`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `accounts` (
-  `id` BIGINT(20) UNSIGNED NOT NULL,
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `owner` VARCHAR(255) NOT NULL,
-  `balance` BIGINT(20) UNSIGNED NOT NULL,
+  `balance` BIGINT(20)  NOT NULL,
   `currency` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   INDEX `owner` (`owner` ASC) VISIBLE,
@@ -36,9 +36,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `entries` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `amount` BIGINT(20) UNSIGNED NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `account_id` BIGINT(20) UNSIGNED NOT NULL,
+  `amount` BIGINT(20)  NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_account_id_idx` (`account_id` ASC) VISIBLE,
   CONSTRAINT `fk_account_id`
@@ -53,9 +53,10 @@ ENGINE = InnoDB;
 -- Table `transferDB`.`transfers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `transfers` (
-  `id` BIGINT(20) NOT NULL,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `from_account_id` BIGINT(20) UNSIGNED NOT NULL,
   `to_account_id` BIGINT(20) UNSIGNED NOT NULL,
+  `amount` BIGINT(20)  NOT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_from_account_id_idx` (`from_account_id` ASC) VISIBLE,

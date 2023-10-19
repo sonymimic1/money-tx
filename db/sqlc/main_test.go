@@ -3,45 +3,45 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// const (
-// 	MYSQL_USER         = "root1"
-// 	MYSQL_PASSWORD     = "123456"
-// 	MYSQL_ADDRESS      = "127.0.0.11"
-// 	MYSQL_ADDRESS_PORT = "3306"
-// 	MYSQL_DB           = "transferDB"
-// )
+var TConn *sql.DB
+var TestQuri *Queries
+
 const (
-	DBDriver = "mysql"
-	DBSource = "mysql://" + MYSQL_USER + ":" + MYSQL_PASSWORD + "@tcp(" + MYSQL_ADDRESS + ":" + MYSQL_ADDRESS_PORT + ")/" + MYSQL_DB + ""
+	dbDriver = "mysql"
+
+	//如果配置了parseTime=true，MySQL中的DATE、DATETIME等时间类型字段将自动转换为golang中的time.Time类型。 类似的0000-00-00 00:00:00 ，会被转为time.Time的零值。
+	dbSource = "root:123456@tcp(127.0.0.1:3306)/transferDB?parseTime=true"
 )
 
-var testQueries *Queries
-
 func TestMain(m *testing.M) {
-
-	// 設定連線資訊
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", MYSQL_USER, MYSQL_PASSWORD, MYSQL_ADDRESS, MYSQL_ADDRESS_PORT, MYSQL_DB)
-	fmt.Printf("dsn=>%s \n", dsn)
-	db, err := sql.Open("mysql", dsn)
-	fmt.Println("MySQL連線中")
+	setup()
+	Conn, err := sql.Open(dbDriver, dbSource)
 	if err != nil {
-		panic(err.Error())
+		log.Fatal("cannot connect to db", err)
 	}
-	// 測試連線
-	err = db.Ping()
-	if err != nil {
-		fmt.Printf("無法與MySQL建立連線： %v \n", err)
-		panic(err.Error())
-	}
+	TConn = Conn
+	TestQuri = New(TConn)
+	fmt.Printf("\033[1;33m%s\033[0m", "> Setup completed\n")
 
-	fmt.Println("MySQL連線ok")
-	testQueries = New(db)
+	code := m.Run()
+	teardown()
+	os.Exit(code)
+}
 
-	os.Exit(m.Run())
+func setup() {
+	// Do something here.
+
+}
+
+func teardown() {
+	// Do something here.
+	fmt.Printf("\033[1;33m%s\033[0m", "> Teardown completed")
+	fmt.Printf("\n")
 }
