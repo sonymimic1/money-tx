@@ -22,9 +22,12 @@ jobs:
     
     - name: mysql service on docker
       run: make mysql
-    
+
+    - name: wait
+      run: sleep 5s
+
     - name: db migration
       run: make migrateup
-      
+
     - name: Test
       run: make test
