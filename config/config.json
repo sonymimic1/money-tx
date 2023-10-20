@@ -6,12 +6,6 @@
     "fileCount": 10,
     "keepDays": 3,
     "path": "./log/"
-  },
-  "App": {
-    "GameServerHost": "10.30.4.40:9220",
-    "GameCodes": [
-      "AB3"
-    ],
-    "WaitConnectInterval": 100
   }
+
 }

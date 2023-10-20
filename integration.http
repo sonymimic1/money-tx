@@ -1,0 +1,12 @@
+@baseUrl = http://127.0.0.1:8080
+
+# @name CreateAccount
+POST {{baseUrl}}/accounts HTTP/1.1
+Content-Type: application/json
+
+{
+    "owner": "Tiger",
+    "currency": "USaD"
+}
+###
+

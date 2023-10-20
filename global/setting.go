@@ -29,7 +29,7 @@ func init() {
 
 	Logger = logger.NewLogger(&logger.Config{
 		Enable:     LoggerSetting.Enable,
-		Filename:   "./Log/auto-search.log",
+		Filename:   "./log/money-tx.log",
 		MaxSize:    LoggerSetting.FileSizeMega,
 		MaxAge:     LoggerSetting.KeepDays,
 		MaxBackups: LoggerSetting.FileCount,

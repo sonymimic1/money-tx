@@ -10,11 +10,4 @@ type (
 		KeepDays     int    `json:"keepDays"`     // log 檔名日期的保留天數
 		Path         string `json:"path"`         // log 路徑; 若為空字串, 則不輸出到檔案
 	}
-
-	// App -.
-	AppSetting struct {
-		GameServerHost      string   //	後端連線位置
-		GameCodes           []string // 遊戲代碼列表
-		WaitConnectInterval int      // 等待連線的間隔期間 (ms)
-	}
 )
