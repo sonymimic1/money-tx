@@ -23,11 +23,8 @@ jobs:
     - name: mysql service on docker
       run: make mysql
 
-    - name: wait db
-      run: sh ./wait-for.sh localhost:3306
-
-    - name: db migration
-      run: make migrateup
+    - name: wait db and db migratrion
+      run: chmod +x ./wait-for.sh & sh ./wait-for.sh localhost:3306 & make migrateup
 
     - name: Test
       run: make test
