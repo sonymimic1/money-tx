@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/sonymimic1/go-transfer/util"
+	"github.com/sonymimic1/go-transfer/pkg/util"
 	"github.com/stretchr/testify/require"
 )
 

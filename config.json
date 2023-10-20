@@ -1,0 +1,10 @@
+{
+  "Log": {
+    "enable": true,
+    "level": "debug",
+    "fileSizeMega": 10,
+    "fileCount": 10,
+    "keepDays": 3,
+    "path": "./log/"
+  }
+}
