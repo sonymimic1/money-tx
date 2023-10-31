@@ -12,12 +12,14 @@ import (
 // common.
 var (
 	LoggerSetting *config.LogSetting
+	AppSetting    *config.AppSetting
 	Logger        *zap.Logger
 )
 
 func init() {
+	logPrefix := "global.init()"
 
-	s, err := util.NewSetting("./")
+	s, err := util.NewSetting("./", "app", "json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,4 +37,10 @@ func init() {
 		MaxBackups: LoggerSetting.FileCount,
 		Level:      LoggerSetting.Level,
 	}, nil)
+
+	err = s.ReadSection("App", &AppSetting)
+	if err != nil {
+		Logger.Fatal(logPrefix+": load AppSetting fail", zap.Error(err))
+	}
+
 }

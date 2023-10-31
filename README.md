@@ -9,5 +9,5 @@ Money-tx
 
 [TOC]
 ## 使用相關
-* sqlc
+* sqlc [https://github.com/sqlc-dev/sqlc] 
     *  使用mysql

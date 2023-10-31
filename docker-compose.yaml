@@ -30,3 +30,5 @@ services:
     depends_on: 
       - mysql-test
     command: ["-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "down", "000001"]
+  
+  

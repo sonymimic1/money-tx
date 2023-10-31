@@ -1,0 +1,15 @@
+{
+  "Log": {
+    "enable": true,
+    "level": "debug",
+    "fileSizeMega": 10,
+    "fileCount": 10,
+    "keepDays": 3,
+    "path": "./log/"
+  },
+  "App": {
+    "dbDriver": "mysql",
+    "dbSource": "root:123456@tcp(127.0.0.1:3306)/transferDB?parseTime=true",
+    "serverAddress": "0.0.0.0:8080"
+  }
+}

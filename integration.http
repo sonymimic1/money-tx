@@ -29,7 +29,7 @@ Content-Type: application/json
 ###
 
 # @name GetListAccount
-GET  {{baseUrl}}/accounts?page_id=13&page_size=5 HTTP/1.1
+GET  {{baseUrl}}/accounts?page_id=0&page_size=5 HTTP/1.1
 Content-Type: application/json
 
 {

@@ -9,12 +9,13 @@ type Setting struct {
 	vp *viper.Viper
 }
 
-func NewSetting(path string) (*Setting, error) {
+func NewSetting(path, name, filetype string) (*Setting, error) {
 	vp := viper.New()
-	vp.SetConfigName("config")
+	vp.SetConfigName(name)
 	vp.AddConfigPath(path)
 
-	vp.SetConfigType("json")
+	vp.SetConfigType(filetype)
+	vp.AutomaticEnv()
 	err := vp.ReadInConfig()
 	if err != nil {
 		return nil, err

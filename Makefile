@@ -57,4 +57,10 @@ test:
 server:
 	go run main.go
 
-.PHONY: migrateinit migrateup migratedown dropdb sqlc-init sqlc-generate test
+#mock tool
+mockTool:
+	go install go.uber.org/mock/mockgen@latest
+mock:
+	mockgen -package=mockdb -source=./db/sqlc/store.go -destination=./db/mock/store.go
+
+.PHONY: migrateinit migrateup migratedown dropdb sqlc-init sqlc-generate test server mock mockTool
