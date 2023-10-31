@@ -7,9 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db "github.com/sonymimic1/go-transfer/db/sqlc"
-	"github.com/sonymimic1/go-transfer/global"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 type transferRequest struct {
@@ -49,9 +46,6 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 
 func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency string) bool {
 
-	logPrefix := "api.validAccount()"
-	logFields := []zapcore.Field{}
-
 	account, err := server.store.GetAccount(ctx, uint64(accountID))
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -64,8 +58,6 @@ func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency s
 
 	if account.Currency != currency {
 		err := fmt.Errorf("account [%d] currency mismatch: %s vs %s", account.ID, account.Currency, currency)
-		global.Logger.Error(logPrefix+": currency error", append(logFields,
-			zap.Error(err))...)
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return false
 	}
