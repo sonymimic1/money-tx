@@ -80,3 +80,4 @@ services:
     volumes:
       - ./db/migration:/migrations
     entrypoint: ["migrate", "create", "-ext","sql","-dir","/migrations","-seq","add_users"]  
+    

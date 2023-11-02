@@ -64,7 +64,7 @@ migrateup1:
 migratedown1:
 	docker-compose run --rm migratedown1
 
-
+	
 
 
 # 初始化sqlc文件 (sqlc.yaml)
@@ -78,9 +78,9 @@ sqlc-generate:
 
 ##==================================================================
 
-# 跑所有package的測試
+# 跑所有package的測試 -count=1 : 不使用緩存
 test:
-	go test -v -cover ./...
+	go test -count=1 -v -cover ./...
 
 server:
 	go run main.go
@@ -91,4 +91,4 @@ mockTool:
 mock:
 	mockgen -package=mockdb -source=./db/sqlc/store.go -destination=./db/mock/store.go
 
-.PHONY: migrateinit migrateup migratedown dropdb sqlc-init sqlc-generate test server mock mockTool migrateup1 migratedown1 migrateCreate
+.PHONY: migrateinit migrateup migratedown dropdb sqlc-init sqlc-generate test server mock mockTool migrateup1 migratedown1 migrateCreate gomock
