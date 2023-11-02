@@ -45,6 +45,7 @@ func (server *Server) createUser(ctx *gin.Context) {
 	}
 
 	_, err = server.store.CreateUser(ctx, arg)
+
 	if err != nil {
 		if errMysql, ok := err.(*mysql.MySQLError); ok {
 			switch errMysql.Number {
