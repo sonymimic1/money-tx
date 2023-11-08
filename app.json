@@ -11,5 +11,9 @@
     "dbDriver": "mysql",
     "dbSource": "root:123456@tcp(127.0.0.1:3306)/transferDB?parseTime=true",
     "serverAddress": "0.0.0.0:8080"
+  },
+  "Token":{
+    "TokenSymmetricKey":"12345678912345678912345678912345",
+    "AccessTokenDuration":"15m"
   }
 }

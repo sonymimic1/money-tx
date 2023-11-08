@@ -13,10 +13,11 @@ import (
 var (
 	LoggerSetting *config.LogSetting
 	AppSetting    *config.AppSetting
+	TokenSetting  *config.TokenSetting
 	Logger        *zap.Logger
 )
 
-func init() {
+func InitConfig() {
 	logPrefix := "global.init()"
 
 	s, err := util.NewSetting("./", "app", "json")
@@ -39,6 +40,11 @@ func init() {
 	}, nil)
 
 	err = s.ReadSection("App", &AppSetting)
+	if err != nil {
+		Logger.Fatal(logPrefix+": load AppSetting fail", zap.Error(err))
+	}
+
+	err = s.ReadSection("Token", &TokenSetting)
 	if err != nil {
 		Logger.Fatal(logPrefix+": load AppSetting fail", zap.Error(err))
 	}
