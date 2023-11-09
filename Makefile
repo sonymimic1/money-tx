@@ -8,7 +8,7 @@ MYSQL_DB=transferDB
 ##=======================Database================================
 # Ｍysql 容器 
 mysql:
-	docker-compose up -d mysql-test
+	docker-compose -f ./tool/docker-compose.yaml up -d mysql-test 
 # 建立資料庫
 createdb:
 	docker exec -it mysql-test mysql -u"$(MYSQL_USER)" -p"$(MYSQL_PASSWORD)" -e "create database "$(MYSQL_DB)""
@@ -27,7 +27,7 @@ migrateinit:
 ###
 # [[ docker-compose 方式]]
 migrateup:
-	docker-compose run --rm migrateup
+	docker-compose -f ./tool/docker-compose.yaml run --rm migrateup
 
 # 將migration文件進行處理退回上一步處理（刪除表格或是刪除異動）
 #migratedown:
@@ -36,14 +36,14 @@ migrateup:
 ###
 # [[ docker-compose 方式]]
 migratedown:
-	docker-compose run --rm migratedown
+	docker-compose -f ./tool/docker-compose.yaml run --rm migratedown
 
 
 # 建立下一步驟migration檔案
 ###
 # [[ docker-compose 方式]]
 migrateCreate:
-	docker-compose run --rm migrateCreate
+	docker-compose -f ./tool/docker-compose.yaml run --rm migrateCreate
 
 
 # 將migration文件進行處理（建立表格或是新增異動）
@@ -53,7 +53,7 @@ migrateCreate:
 ###
 # [[ docker-compose 方式]]
 migrateup1:
-	docker-compose run --rm migrateup1
+	docker-compose -f ./tool/docker-compose.yaml run --rm migrateup1
 
 # 將migration文件進行處理退回上一步處理（刪除表格或是刪除異動）
 #migratedown:
@@ -62,7 +62,7 @@ migrateup1:
 ###
 # [[ docker-compose 方式]]
 migratedown1:
-	docker-compose run --rm migratedown1
+	docker-compose -f ./tool/docker-compose.yaml run --rm migratedown1
 
 	
 
@@ -91,4 +91,10 @@ mockTool:
 mock:
 	mockgen -package=mockdb -source=./db/sqlc/store.go -destination=./db/mock/store.go
 
-.PHONY: migrateinit migrateup migratedown dropdb sqlc-init sqlc-generate test server mock mockTool migrateup1 migratedown1 migrateCreate gomock
+image:
+	docker build -t money-tx:latest .
+
+docker-run:
+	docker run --name money-tx -p 8080:8080 -e GIN_MODE=release money-tx:latest
+
+.PHONY: migrateinit migrateup migratedown dropdb sqlc-init sqlc-generate test server mock mockTool migrateup1 migratedown1 migrateCreate gomock image docker-run

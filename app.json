@@ -9,7 +9,7 @@
   },
   "App": {
     "dbDriver": "mysql",
-    "dbSource": "root:123456@tcp(127.0.0.1:3306)/transferDB?parseTime=true",
+    "dbSource": "root:123456@tcp(mysql-test:3306)/transferDB?parseTime=true",
     "serverAddress": "0.0.0.0:8080"
   },
   "Token":{

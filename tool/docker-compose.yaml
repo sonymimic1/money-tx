@@ -1,0 +1,82 @@
+version: "3.9"
+services:
+  mysql-test:
+    restart: always
+    container_name: mysql-test
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=transferDB
+    ports:
+      - 3306:3306
+
+  ### phpmyadmin 管理mysql 後台管理
+  mysql-manage:
+    build:
+      context: ./mysql-manage
+    environment:
+      - TZ=${TZ}
+      - PMA_ARBITRARY=1
+      - MYSQL_USER=${MYSQL_MANAGE_USERNAME}               # 設定 Mysql 用戶名
+      - MYSQL_PASSWORD=${MYSQL_MANAGE_PASSWORD}           # 設定 Mysql 用戶密碼
+      - MYSQL_ROOT_PASSWORD=${MYSQL_MANAGE_ROOT_PASSWORD} # 設定 Mysql root 用戶密碼
+      - PMA_HOST=${MYSQL_MANAGE_CONNECT_HOST}             # 設定連結Mysql service's host. 可以是Mysql服務容器名稱；也可以是Mysql服務容器的IP位置
+      - PMA_PORT=${MYSQL_MANAGE_CONNECT_PORT}             # 設定連結Mysql port
+    ports:
+      - "${MYSQL_MANAGE_PORT}:80"                         # 設定容器80映射到主機port.用來在主機上訪問後台管理系統
+    depends_on:                                           # 依賴容器Mysql容器啟動後再啟動
+      - mysql-test                                             
+    restart: always
+
+  ### migration 所有的up檔案按造順序執行
+  migrateup:
+    image: migrate/migrate  # 使用 migrate/migrate 镜像
+    container_name: migrateup
+    volumes:
+      - ./../db/migration:/migrations
+    depends_on: 
+      - mysql-test
+    #command: ["-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "up"]
+    #利用entrypoint將預設執行換成執行腳本等待ＤＢ準備完成,再執行回migrate的操作
+    entrypoint: ["/migrations/wait-for.sh", "mysql-test:3306", "--", "migrate", "-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "up"]
+  
+  ### migration 所有的down檔案按造反向順序執行
+  migratedown:
+    image: migrate/migrate  # 使用 migrate/migrate 镜像
+    container_name: migratedown
+    volumes:
+      - ./../db/migration:/migrations
+    depends_on: 
+      - mysql-test
+    command: ["-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "down"]
+
+  ### migration 執行最近一個up檔案
+  migrateup1:
+    image: migrate/migrate  # 使用 migrate/migrate 镜像
+    container_name: migrateup1
+    volumes:
+      - ./../db/migration:/migrations
+    depends_on: 
+      - mysql-test
+    #command: ["-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "up"]
+    #利用entrypoint將預設執行換成執行腳本等待ＤＢ準備完成,再執行回migrate的操作
+    entrypoint: ["/migrations/wait-for.sh", "mysql-test:3306", "--", "migrate", "-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "up","1"]
+  
+  ### migration 執行最近一個down檔案
+  migratedown1:
+    image: migrate/migrate  # 使用 migrate/migrate 镜像
+    container_name: migratedown1
+    volumes:
+      - ./../db/migration:/migrations
+    depends_on: 
+      - mysql-test
+    command: ["-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "down", "1"]
+  
+  ## 
+  migrateCreate:
+    image: migrate/migrate  # 使用 migrate/migrate 镜像
+    container_name: migrateCreate
+    volumes:
+      - ./../db/migration:/migrations
+    entrypoint: ["migrate", "create", "-ext","sql","-dir","/migrations","-seq","add_users"]  
+    
