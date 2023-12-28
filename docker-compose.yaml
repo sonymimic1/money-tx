@@ -16,11 +16,12 @@ services:
     container_name: migrateup
     volumes:
       - ./db/migration:/migrations
-    depends_on: 
-      - mysql-test
+    #depends_on: 
+    #  - mysql-test
     #command: ["-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "up"]
     #利用entrypoint將預設執行換成執行腳本等待ＤＢ準備完成,再執行回migrate的操作
-    entrypoint: ["/migrations/wait-for.sh", "mysql-test:3306", "--", "migrate", "-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "up"]
+    #entrypoint: ["/migrations/wait-for.sh", "mysql-test:3306", "--", "migrate", "-path=/migrations/", "-database", "mysql://root:123456@tcp(mysql-test:3306)/transferDB", "-verbose", "up"]
+    entrypoint: ["migrate", "-path=/migrations/", "-database", "mysql://root:OU7DK4neI2JqCfh0UgzY@tcp(database-1.c7mgwuam4ccq.ap-northeast-1.rds.amazonaws.com:3306)/transferDB", "-verbose", "up"]
 
   ## 主程式  
   api:

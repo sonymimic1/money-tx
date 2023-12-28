@@ -29,6 +29,9 @@ migrateinit:
 migrateup:
 	docker-compose -f ./tool/docker-compose.yaml run --rm migrateup
 
+local-migrateup:
+	docker-compose -f ./docker-compose.yaml run --rm migrateup
+
 # 將migration文件進行處理退回上一步處理（刪除表格或是刪除異動）
 #migratedown:
 #	docker run -v "$(shell pwd)"/db/migration:/migrations --rm migrate/migrate -path migrations -database "mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_ADDRESS):$(MYSQL_ADDRESS_PORT))/$(MYSQL_DB)" -verbose down 000001

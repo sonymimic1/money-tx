@@ -6,30 +6,48 @@ import (
 )
 
 type Setting struct {
-	vp *viper.Viper
+	Vp *viper.Viper
 }
 
+// LoadConfig reads configuration from file or environment variables.
+func LoadConfig(path string) (err error) {
+	viper.AddConfigPath(path)
+	viper.SetConfigName("app")
+	viper.SetConfigType("env")
+
+	viper.AutomaticEnv()
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 func NewSetting(path, name, filetype string) (*Setting, error) {
 	vp := viper.New()
-	vp.SetConfigName(name)
 	vp.AddConfigPath(path)
-
-	vp.SetConfigType(filetype)
-	vp.AutomaticEnv()
+	vp.SetConfigName(name)
+	vp.SetConfigType("env")
+	//vp.AutomaticEnv()
 	err := vp.ReadInConfig()
 	if err != nil {
 		return nil, err
 	}
 
 	s := &Setting{vp}
-	s.WatchSettingChange()
+
+	if filetype == "json" {
+		s.WatchSettingChange()
+	}
+
 	return s, nil
 }
 
 func (s *Setting) WatchSettingChange() {
 	go func() {
-		s.vp.WatchConfig()
-		s.vp.OnConfigChange(func(in fsnotify.Event) {
+		s.Vp.WatchConfig()
+		s.Vp.OnConfigChange(func(in fsnotify.Event) {
 			_ = s.ReloadAllSection()
 		})
 	}()
@@ -38,7 +56,7 @@ func (s *Setting) WatchSettingChange() {
 var sections = make(map[string]interface{})
 
 func (s *Setting) ReadSection(k string, v interface{}) error {
-	err := s.vp.UnmarshalKey(k, v)
+	err := s.Vp.UnmarshalKey(k, v)
 	if err != nil {
 		return err
 	}
@@ -58,4 +76,9 @@ func (s *Setting) ReloadAllSection() error {
 	}
 
 	return nil
+}
+
+func (s *Setting) EnvReadSection(section interface{}) error {
+	err := s.Vp.Unmarshal(section)
+	return err
 }
